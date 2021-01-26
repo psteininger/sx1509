@@ -65,7 +65,7 @@ defmodule SX1509.Commands do
   @spec pin_data(Conn.t(), SX1509.pin_number()) ::
           {:ok, Conn.t()} | {:error, reason :: any}
   def pin_data(%{conn: conn} = device, pin) do
-    with {:ok, <<bytes::unsigned-integer-size(16)>>} <- Registers.IO.read_data(conn) do
+    with {:ok, <<bytes::16>>} <- Registers.IO.read_data(conn) do
       value = bytes >>> pin &&& 1
       {:ok, value, %{device | conn: conn, data: <<bytes::16>>}}
     end
@@ -93,11 +93,11 @@ defmodule SX1509.Commands do
          do: {:ok, %{device | conn: conn, dir: <<bytes::16>>}}
   end
 
-  defp clear_pin(<<bytes::unsigned-integer-size(16)>>, pin) when is_pin_number(pin) do
+  defp clear_pin(<<bytes::16>>, pin) when is_pin_number(pin) do
     bytes &&& ~~~ (1 <<< pin)
   end
 
-  defp set_pin(<<bytes::unsigned-integer-size(16)>>, pin) when is_pin_number(pin) do
+  defp set_pin(<<bytes::16>>, pin) when is_pin_number(pin) do
     bytes ||| 1 <<< pin
   end
 
