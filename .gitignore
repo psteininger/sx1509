@@ -27,3 +27,4 @@ sx1509-*.tar
 /tmp
 
 .idea
+mix.lock
