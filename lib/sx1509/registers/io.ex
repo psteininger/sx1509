@@ -27,7 +27,7 @@ defmodule SX1509.Registers.IO do
   RegLongSlewB - Output buffer long slew register - I/O[15-8] (Bank B) (default: 0x00)
   RegLongSlewA - Output buffer long slew register - I/O[7-0] (Bank A) (default: 0x00)
 
-  En ables increased slew rate of the output buffer of each [output-configured] IO
+  Enables increased slew rate of the output buffer of each [output-configured] IO
   0 : Increased slew rate is disabled
   1 : Increased slew rate is enabled
   """
