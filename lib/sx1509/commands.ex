@@ -1,5 +1,6 @@
 defmodule SX1509.Commands do
   use Bitwise
+
   import SX1509.Guards
 #  import Wafer.Twiddles
   alias SX1509.Registers
@@ -70,6 +71,27 @@ defmodule SX1509.Commands do
     end
   end
 
+  @doc """
+  Disables input for specified pin number.
+  """
+  @spec disable_input(Conn.t(), SX1509.pin_number()) ::
+          {:ok, Conn.t()} | {:error, reason :: any}
+  def disable_input(%{conn: conn, input_disable: input_disable} = device, pin) do
+    with bytes <- set_pin(input_disable, pin),
+         {:ok, conn} <- Registers.IO.write_input_disable(conn, <<bytes::16>>),
+         do: {:ok, %{device | conn: conn, dir: <<bytes::16>>}}
+  end
+
+  @doc """
+  Enables input for specified pin number.
+  """
+  @spec enable_input(Conn.t(), SX1509.pin_number()) ::
+          {:ok, Conn.t()} | {:error, reason :: any}
+  def enable_input(%{conn: conn, input_disable: input_disable} = device, pin) do
+    with bytes <- clear_pin(input_disable, pin),
+         {:ok, conn} <- Registers.IO.write_input_disable(conn, <<bytes::16>>),
+         do: {:ok, %{device | conn: conn, dir: <<bytes::16>>}}
+  end
 
   defp clear_pin(<<bytes::unsigned-integer-size(16)>>, pin) when is_pin_number(pin) do
     bytes &&& ~~~ (1 <<< pin)
