@@ -36,13 +36,13 @@ defmodule SX1509.Commands do
   @spec pin_direction(Conn.t(), SX1509.pin_number(), GPIO.pin_direction()) ::
           {:ok, Conn.t()} | {:error, reason :: any}
   def pin_direction(%{conn: conn, dir: dir} = device, pin, :out) do
-    with <<bytes::unsigned-integer-size(16)>> <- clear_pin(dir, pin),
+    with bytes <- clear_pin(dir, pin),
          {:ok, conn} <- Registers.IO.write_dir(conn, <<bytes::16>>),
          do: {:ok, %{device | conn: conn, dir: <<bytes::16>>}}
   end
 
   def pin_direction(%{conn: conn, dir: dir} = device, pin, :in) do
-    with <<bytes::unsigned-integer-size(16)>> <- set_pin(dir, pin),
+    with bytes <- set_pin(dir, pin),
          {:ok, conn} <- Registers.IO.write_dir(conn, <<bytes::16>>),
          do: {:ok, %{device | conn: conn, dir: <<bytes::16>>}}
   end
@@ -53,7 +53,7 @@ defmodule SX1509.Commands do
   @spec pin_data(Conn.t(), SX1509.pin_number(), GPIO.pin_value()) ::
           {:ok, Conn.t()} | {:error, reason :: any}
   def pin_data(%{conn: conn, data: data} = device, pin, value) do
-    with <<bytes::unsigned-integer-size(16)>> <- set_pin(data, pin, value),
+    with bytes <- set_pin(data, pin, value),
          {:ok, conn} <- Registers.IO.write_data(conn, <<bytes::16>>),
          do: {:ok, %{device | conn: conn, data: <<bytes::16>>}}
   end
