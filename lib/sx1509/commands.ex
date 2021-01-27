@@ -8,7 +8,7 @@ defmodule SX1509.Commands do
   @moduledoc """
   Commands for interacting with the SX1509 device.
 
-  These commands wrap the registers defined in `SX1509.Registers.DeviceIO`, `SX1509.Registers.KeypadEngine` and
+  These commands wrap the registers defined in `SX1509.Registers.Device`, `SX1509.Registers.IO`, `SX1509.Registers.KeypadEngine` and
   `SX1509.Registers.LEDDriver` allowing you to achieve higher-level effects without
   worrying about the register mapping or bit twiddling.
   """
@@ -92,6 +92,8 @@ defmodule SX1509.Commands do
          {:ok, conn} <- Registers.IO.write_input_disable(conn, <<bytes::16>>),
          do: {:ok, %{device | conn: conn, dir: <<bytes::16>>}}
   end
+
+
 
   defp clear_pin(<<bytes::16>>, pin) when is_pin_number(pin) do
     bytes &&& ~~~ (1 <<< pin)
